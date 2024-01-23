@@ -34,7 +34,7 @@ def main():
                                                    models_to_merge=[model1, model2],
                                                    exclude_param_names_regex=[],
                                                    trainers=[None, None],
-                                                   scaling_coefficient=args.scaling_coefficient,
+                                                   scaling_coefficient=None,
                                                    nums_fisher_examples=None, 
                                                    fisher_scaling_coefficients=None,
                                                    normalize_fisher_weight=None,
