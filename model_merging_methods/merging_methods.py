@@ -511,12 +511,13 @@ class MergingMethod:
 
         flattened_models_to_merge_param = [task_vector_param_dict_to_single_vector(task_vector=task_vector) for task_vector in models_to_merge_task_vectors]
         # Tensor, shape (num_models_to_merge, num_total_params), flattened parameters of individual models that need to be merged
-        flattened_models_to_merge_param = torch.vstack(flattened_models_to_merge_param)
+        #flattened_models_to_merge_param = torch.vstack(flattened_models_to_merge_param)
 
         print("1", flush=True)
         with torch.no_grad():
+            flattened_models_to_merge_param = torch.vstack([mask_smallest_magnitude_param_values(vec) for vec in flattened_models_to_merge_param])
             # Tensor, shape (num_models_to_merge, num_total_params), mask the smallest-magnitude parameter values using param_value_mask_rate
-            flattened_models_to_merge_param = mask_smallest_magnitude_param_values(flattened_models_to_merge_param=flattened_models_to_merge_param, param_value_mask_rate=param_value_mask_rate)
+            #flattened_models_to_merge_param = mask_smallest_magnitude_param_values(flattened_models_to_merge_param=flattened_models_to_merge_param, param_value_mask_rate=param_value_mask_rate)
             print("2", flush=True)
             # Tensor, shape (num_total_params, ), get the signs for each parameter in flattened_models_to_merge_param
             param_signs = get_param_signs(flattened_models_to_merge_param=flattened_models_to_merge_param)
