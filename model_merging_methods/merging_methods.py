@@ -458,7 +458,7 @@ class MergingMethod:
             :return:
             """
 
-            flattened_models_to_merge_param = flattened_models_to_merge_param.to("gpu:0")
+            flattened_models_to_merge_param = flattened_models_to_merge_param.to("cuda:0")
             
             # num_models_to_merge, num_total_params = flattened_models_to_merge_param.shape
             num_mask_params = int(flattened_models_to_merge_param.shape[1] * param_value_mask_rate)
