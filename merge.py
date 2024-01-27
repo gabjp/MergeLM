@@ -27,26 +27,26 @@ def main():
     model1 = PeftModel.from_pretrained(llama1, args.m1).merge_and_unload()
     model2 = PeftModel.from_pretrained(llama2, args.m2).merge_and_unload()
 
-    merging_method = MergingMethod(merging_method_name="mask_merging")
+    merging_method = MergingMethod(merging_method_name="ties_merging")
 
     merged_model = pretrained_model
     merged_model = merging_method.get_merged_model(merged_model=merged_model,
                                                    models_to_merge=[model1, model2],
                                                    exclude_param_names_regex=[],
                                                    trainers=[None, None],
-                                                   scaling_coefficient=None,
+                                                   scaling_coefficient=1,
                                                    nums_fisher_examples=None, 
                                                    fisher_scaling_coefficients=None,
                                                    normalize_fisher_weight=None,
                                                    minimal_fisher_weight=None,
                                                    nums_regmean_examples=None,
                                                    reduce_non_diagonal_ratio=None,
-                                                   param_value_mask_rate=None,
-                                                   weight_format="delta_weight",
-                                                   weight_mask_rates=[0.9,0.9],
-                                                   use_weight_rescale=True,
-                                                   mask_strategy="random",
-                                                   mask_apply_method="average_merging",
+                                                   param_value_mask_rate=0.8,
+                                                   weight_format=None,
+                                                   weight_mask_rates=None,
+                                                   use_weight_rescale=None,
+                                                   mask_strategy=None,
+                                                   mask_apply_method=None,
                                                    models_use_deepcopy=False)
 
 

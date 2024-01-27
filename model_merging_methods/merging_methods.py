@@ -8,7 +8,6 @@ from model_merging_methods.task_vector import TaskVector
 from utils.utils import get_param_names_to_merge, get_modules_to_merge
 from model_merging_methods.mask_weights_utils import mask_model_weights
 
-
 class MergingMethod:
     def __init__(self, merging_method_name: str):
         """
