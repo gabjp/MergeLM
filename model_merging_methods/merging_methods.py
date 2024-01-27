@@ -457,20 +457,31 @@ class MergingMethod:
             :param param_value_mask_rate: float, mask rate of the smallest-magnitude parameter values
             :return:
             """
+            def print_ram():
+                import os
+ 
+                # Getting all memory using os.popen()
+                total_memory, used_memory, free_memory = map(
+                    int, os.popen('free -t -m').readlines()[-1].split()[1:])
+ 
+                # Memory usage
+                print("RAM memory % used:", round((used_memory/total_memory) * 100, 2), flush=True)
+                return 
             
             # num_models_to_merge, num_total_params = flattened_models_to_merge_param.shape
             #num_mask_params = int(flattened_models_to_merge_param.shape[1] * param_value_mask_rate)
             # Tensor, shape (num_models_to_merge, 1), find the num_mask_params-th smallest magnitude element of all the parameters in each individual model
-            abs_val = flattened_models_to_merge_param.abs().to("cuda:0")
-            print("oi", flush=True)
+            print_ram()
+            abs_val = flattened_models_to_merge_param.abs()
+            print_ram()
             #kth_values, _ = abs_val.kthvalue(k=num_mask_params, dim=1, keepdim=True)
             kth_values = torch.quantile(abs_val, param_value_mask_rate)
-            print("oi", flush=True)
-            kth_values = kth_values.cpu()
-            print("oi")
+            print_ram()
+            kth_values = kth_values
+            print_ram()
             # Tensor, shape (num_models_to_merge, num_total_params), where True is for parameters that we want to preserve
             mask = flattened_models_to_merge_param.abs() >= kth_values
-            print("oi", flush=True)
+            print_ram()
             
 
             return (flattened_models_to_merge_param * mask)
