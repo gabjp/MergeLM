@@ -457,13 +457,16 @@ class MergingMethod:
             :param param_value_mask_rate: float, mask rate of the smallest-magnitude parameter values
             :return:
             """
+            print("oi1", flush=True)
             # num_models_to_merge, num_total_params = flattened_models_to_merge_param.shape
             num_mask_params = int(flattened_models_to_merge_param.shape[1] * param_value_mask_rate)
-
+            print("oi2", flush=True)
             # Tensor, shape (num_models_to_merge, 1), find the num_mask_params-th smallest magnitude element of all the parameters in each individual model
             kth_values, _ = flattened_models_to_merge_param.abs().kthvalue(k=num_mask_params, dim=1, keepdim=True)
+            print("oi3", flush=True)
             # Tensor, shape (num_models_to_merge, num_total_params), where True is for parameters that we want to preserve
             mask = flattened_models_to_merge_param.abs() >= kth_values
+            print("oi4", flush=True)
 
             return flattened_models_to_merge_param * mask
 
