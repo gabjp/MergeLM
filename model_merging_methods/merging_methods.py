@@ -462,10 +462,13 @@ class MergingMethod:
             #num_mask_params = int(flattened_models_to_merge_param.shape[1] * param_value_mask_rate)
             # Tensor, shape (num_models_to_merge, 1), find the num_mask_params-th smallest magnitude element of all the parameters in each individual model
             abs_val = flattened_models_to_merge_param.abs()
+            print("oi", flush=True)
             #kth_values, _ = abs_val.kthvalue(k=num_mask_params, dim=1, keepdim=True)
             kth_values = torch.quantile(abs_val, param_value_mask_rate)
+            print("oi", flush=True)
             # Tensor, shape (num_models_to_merge, num_total_params), where True is for parameters that we want to preserve
             mask = flattened_models_to_merge_param.abs() >= kth_values
+            print("oi", flush=True)
             
 
             return (flattened_models_to_merge_param * mask)
