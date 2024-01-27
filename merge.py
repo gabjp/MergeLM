@@ -27,7 +27,11 @@ def main():
     model1 = PeftModel.from_pretrained(llama1, args.m1).merge_and_unload()
     model2 = PeftModel.from_pretrained(llama2, args.m2).merge_and_unload()
 
+    print('models loaded', flush=True)
+
     merging_method = MergingMethod(merging_method_name="ties_merging")
+
+    print('starting to merge', flush=True)
 
     merged_model = pretrained_model
     merged_model = merging_method.get_merged_model(merged_model=merged_model,
