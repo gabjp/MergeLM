@@ -472,13 +472,11 @@ class MergingMethod:
             # num_models_to_merge, num_total_params = flattened_models_to_merge_param.shape
             #num_mask_params = int(flattened_models_to_merge_param.shape[1] * param_value_mask_rate)
             # Tensor, shape (num_models_to_merge, 1), find the num_mask_params-th smallest magnitude element of all the parameters in each individual model
-            print_ram() # 78
+            print_ram() # 68
             abs_val = flattened_models_to_merge_param.abs()
-            print_ram() # 88
+            print_ram() # 78
             #kth_values, _ = abs_val.kthvalue(k=num_mask_params, dim=1, keepdim=True)
             kth_values = torch.quantile(abs_val, param_value_mask_rate)
-            print_ram()
-            kth_values = kth_values
             print_ram()
             # Tensor, shape (num_models_to_merge, num_total_params), where True is for parameters that we want to preserve
             mask = flattened_models_to_merge_param.abs() >= kth_values
@@ -520,18 +518,18 @@ class MergingMethod:
             return merged_flattened_param
 
         assert isinstance(scaling_coefficient, float), "wrong type of scaling_coefficient, should be float!"
-        print_ram() # 38
-        models_to_merge_task_vectors = [TaskVector(pretrained_model=merged_model, finetuned_model=model_to_merge, exclude_param_names_regex=exclude_param_names_regex) for model_to_merge in models_to_merge]
-        print_ram() # 58
-        flattened_models_to_merge_param = [task_vector_param_dict_to_single_vector(task_vector=task_vector) for task_vector in models_to_merge_task_vectors]
-        print_ram()
-        models_to_merge_task_vectors = models_to_merge_task_vectors[0]
-        # Tensor, shape (num_models_to_merge, num_total_params), flattened parameters of individual models that need to be merged
-        #flattened_models_to_merge_param = torch.vstack(flattened_models_to_merge_param)
-        
-        print_ram() #78
-        print("1", flush=True)
         with torch.no_grad():
+            print_ram() # 38
+            models_to_merge_task_vectors = [TaskVector(pretrained_model=merged_model, finetuned_model=model_to_merge, exclude_param_names_regex=exclude_param_names_regex) for model_to_merge in models_to_merge]
+            print_ram() # 58
+            flattened_models_to_merge_param = [task_vector_param_dict_to_single_vector(task_vector=task_vector) for task_vector in models_to_merge_task_vectors]
+            print_ram() # 78
+            models_to_merge_task_vectors = models_to_merge_task_vectors[0]
+            # Tensor, shape (num_models_to_merge, num_total_params), flattened parameters of individual models that need to be merged
+            #flattened_models_to_merge_param = torch.vstack(flattened_models_to_merge_param)
+            
+            print_ram() #68
+            print("1", flush=True)
             flattened_models_to_merge_param = torch.vstack([mask_smallest_magnitude_param_values(vec) for vec in flattened_models_to_merge_param])
             # Tensor, shape (num_models_to_merge, num_total_params), mask the smallest-magnitude parameter values using param_value_mask_rate
             #flattened_models_to_merge_param = mask_smallest_magnitude_param_values(flattened_models_to_merge_param=flattened_models_to_merge_param, param_value_mask_rate=param_value_mask_rate)
