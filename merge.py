@@ -54,7 +54,7 @@ def main():
         
     elif args.method == "simple_average":
 
-        merging_method = MergingMethod(merging_method_name="simple_average")
+        merging_method = MergingMethod(merging_method_name="average_merging")
         merged_model = pretrained_model
         merged_model = merging_method.get_merged_model(merged_model=merged_model,
                                                     models_to_merge=[model1, model2],
@@ -95,7 +95,7 @@ def main():
                                                     weight_mask_rates=[0.9,0.9],
                                                     use_weight_rescale=True,
                                                     mask_strategy="random",
-                                                    mask_apply_method="simple_average",
+                                                    mask_apply_method="average_merging",
                                                     models_use_deepcopy=False)
     
     else:
