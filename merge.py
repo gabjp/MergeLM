@@ -15,7 +15,7 @@ def main():
     parser.add_argument("--m1", type=str, default="")
     parser.add_argument("--m2", type=str, default="")
     parser.add_argument("--llama-path", type=str, default="meta-llama/Llama-2-7b-hf")
-    parser.add_argument("--p", type=float, default=0.5)
+    parser.add_argument("--method", type=str, default="")
     args = parser.parse_args()
 
     tokenizer = AutoTokenizer.from_pretrained(args.llama_path, use_fast=False)
@@ -29,29 +29,78 @@ def main():
 
     print('models loaded', flush=True)
 
-    merging_method = MergingMethod(merging_method_name="ties_merging")
+    if args.method == "ties":
 
-    print('starting to merge', flush=True)
+        merging_method = MergingMethod(merging_method_name="ties_merging")
+        merged_model = pretrained_model
+        merged_model = merging_method.get_merged_model(merged_model=merged_model,
+                                                    models_to_merge=[model1, model2],
+                                                    exclude_param_names_regex=[],
+                                                    trainers=[None, None],
+                                                    scaling_coefficient=1.0,
+                                                    nums_fisher_examples=None, 
+                                                    fisher_scaling_coefficients=None,
+                                                    normalize_fisher_weight=None,
+                                                    minimal_fisher_weight=None,
+                                                    nums_regmean_examples=None,
+                                                    reduce_non_diagonal_ratio=None,
+                                                    param_value_mask_rate=0.8,
+                                                    weight_format=None,
+                                                    weight_mask_rates=None,
+                                                    use_weight_rescale=None,
+                                                    mask_strategy=None,
+                                                    mask_apply_method=None,
+                                                    models_use_deepcopy=False)
+        
+    elif args.method == "simple_average":
 
-    merged_model = pretrained_model
-    merged_model = merging_method.get_merged_model(merged_model=merged_model,
-                                                   models_to_merge=[model1, model2],
-                                                   exclude_param_names_regex=[],
-                                                   trainers=[None, None],
-                                                   scaling_coefficient=1.0,
-                                                   nums_fisher_examples=None, 
-                                                   fisher_scaling_coefficients=None,
-                                                   normalize_fisher_weight=None,
-                                                   minimal_fisher_weight=None,
-                                                   nums_regmean_examples=None,
-                                                   reduce_non_diagonal_ratio=None,
-                                                   param_value_mask_rate=0.8,
-                                                   weight_format=None,
-                                                   weight_mask_rates=None,
-                                                   use_weight_rescale=None,
-                                                   mask_strategy=None,
-                                                   mask_apply_method=None,
-                                                   models_use_deepcopy=False)
+        merging_method = MergingMethod(merging_method_name="simple_average")
+        merged_model = pretrained_model
+        merged_model = merging_method.get_merged_model(merged_model=merged_model,
+                                                    models_to_merge=[model1, model2],
+                                                    exclude_param_names_regex=[],
+                                                    trainers=[None, None],
+                                                    scaling_coefficient=None,
+                                                    nums_fisher_examples=None, 
+                                                    fisher_scaling_coefficients=None,
+                                                    normalize_fisher_weight=None,
+                                                    minimal_fisher_weight=None,
+                                                    nums_regmean_examples=None,
+                                                    reduce_non_diagonal_ratio=None,
+                                                    param_value_mask_rate=None,
+                                                    weight_format=None,
+                                                    weight_mask_rates=None,
+                                                    use_weight_rescale=None,
+                                                    mask_strategy=None,
+                                                    mask_apply_method=None,
+                                                    models_use_deepcopy=False)
+        
+    elif args.method == "dare":
+
+        merging_method = MergingMethod(merging_method_name="mask_merging")
+        merged_model = pretrained_model
+        merged_model = merging_method.get_merged_model(merged_model=merged_model,
+                                                    models_to_merge=[model1, model2],
+                                                    exclude_param_names_regex=[],
+                                                    trainers=[None, None],
+                                                    scaling_coefficient=None,
+                                                    nums_fisher_examples=None, 
+                                                    fisher_scaling_coefficients=None,
+                                                    normalize_fisher_weight=None,
+                                                    minimal_fisher_weight=None,
+                                                    nums_regmean_examples=None,
+                                                    reduce_non_diagonal_ratio=None,
+                                                    param_value_mask_rate=None,
+                                                    weight_format="delta_weight",
+                                                    weight_mask_rates=[0.9,0.9],
+                                                    use_weight_rescale=True,
+                                                    mask_strategy="random",
+                                                    mask_apply_method="simple_average",
+                                                    models_use_deepcopy=False)
+    
+    else:
+        print("not implemented method")
+        return
 
 
     if not os.path.exists(args.save_path):
