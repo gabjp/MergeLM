@@ -25,6 +25,7 @@ finetuned_model_backbone_mapping_dict = {
     "WizardLM-7B-V1.0": "llama-7b-hf",
     "WizardLM-7B-V1.0-recovered": "llama-7b-hf",
     "WizardLM-13B-V1.2": "Llama-2-13b-hf",
+    "merged": "Llama-2-13b-hf",
     "WizardLM-70B-V1.0": "Llama-2-70b-hf",
     "WizardMath-7B-V1.0": "Llama-2-7b-hf",
     "WizardMath-13B-V1.0": "Llama-2-13b-hf",
