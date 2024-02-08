@@ -87,7 +87,7 @@ def create_llm(finetuned_model_name, pretrained_model_name, args, logger: loggin
             assert os.path.exists(finetuned_model_name)
             llm = LLM(model=finetuned_model_name, tensor_parallel_size=tensor_parallel_size)
         else:
-            llm = LLM("model=WizardLM/" + finetuned_model_name, tensor_parallel_size=tensor_parallel_size)
+            llm = LLM(model="WizardLM/" + finetuned_model_name, tensor_parallel_size=tensor_parallel_size)
         assert save_model_path is None
     else:
         try:
