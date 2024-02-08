@@ -5,4 +5,4 @@ import torch
 #else:
 #    cache_dir = "/Users/yule/.cache"
 
-cache_dir = "~/LLMM/MergeLM/cache"
+cache_dir = "/home/xuxi/LLMM/models"
