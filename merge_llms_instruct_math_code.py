@@ -44,8 +44,8 @@ def get_merge_performance(args: argparse.Namespace, finetuned_model_names: list,
         pretrained_model = AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=os.path.join(cache_dir, args.pretrained_model_name), device_map="cpu")
         pretrained_tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=os.path.join(cache_dir, args.pretrained_model_name))
     except:
-        pretrained_model = AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=args.pretrained_model_name, cache_dir=cache_dir, device_map="cpu")
-        pretrained_tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=args.pretrained_model_name, cache_dir=cache_dir)
+        pretrained_model = AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path="meta-llama/" + args.pretrained_model_name, cache_dir=cache_dir, device_map="cpu")
+        pretrained_tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="meta-llama/" + args.pretrained_model_name, cache_dir=cache_dir)
 
     # set the pad_token of pretrained and finetuned tokenizer
     # note that WizardMath-70B-V1.0 adds two tokens {"<pad>": 32000, "[PAD]": 32001} with (32002, 8192) token embedding size
