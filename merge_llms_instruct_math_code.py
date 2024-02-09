@@ -239,8 +239,12 @@ if __name__ == "__main__":
     finetuned_tokenizers = []
     merging_method = MergingMethod(merging_method_name=args.merging_method_name)
     for finetuned_model_name in finetuned_model_names:
-        finetuned_model = AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=os.path.join(cache_dir, finetuned_model_name), device_map="cpu")
-        finetuned_tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=os.path.join(cache_dir, finetuned_model_name),)
+        if 'Wizard' in finetuned_model_name:
+            name = "WizardLM/"+finetuned_model_name
+        else:
+            name = "layoric/"+finetuned_model_name
+        finetuned_model = AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=name, device_map="cpu")
+        finetuned_tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=name,)
         models_to_merge.append(finetuned_model)
         finetuned_tokenizers.append(finetuned_tokenizer)
 
