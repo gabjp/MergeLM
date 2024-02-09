@@ -25,7 +25,6 @@ finetuned_model_backbone_mapping_dict = {
     "WizardLM-7B-V1.0": "llama-7b-hf",
     "WizardLM-7B-V1.0-recovered": "llama-7b-hf",
     "WizardLM-13B-V1.2": "Llama-2-13b-hf",
-    "merged": "Llama-2-13b-hf",
     "WizardLM-70B-V1.0": "Llama-2-70b-hf",
     "WizardMath-7B-V1.0": "Llama-2-7b-hf",
     "WizardMath-13B-V1.0": "Llama-2-13b-hf",
@@ -84,11 +83,9 @@ def create_llm(finetuned_model_name, pretrained_model_name, args, logger: loggin
     if just_inference:
         if os.path.exists(os.path.join(cache_dir, finetuned_model_name)):
             llm = LLM(model=os.path.join(cache_dir, finetuned_model_name), tensor_parallel_size=tensor_parallel_size)
-        elif os.path.exists(finetuned_model_name):
+        else:
             assert os.path.exists(finetuned_model_name)
             llm = LLM(model=finetuned_model_name, tensor_parallel_size=tensor_parallel_size)
-        else:
-            llm = LLM(model="WizardLM/" + finetuned_model_name, tensor_parallel_size=tensor_parallel_size)
         assert save_model_path is None
     else:
         try:
@@ -557,7 +554,7 @@ if __name__ == "__main__":
                         choices=["WizardLM-7B-V1.0", "WizardLM-13B-V1.2", "WizardLM-70B-V1.0",
                                  "WizardMath-7B-V1.0", "WizardMath-13B-V1.0", "WizardMath-70B-V1.0",
                                  "WizardCoder-Python-7B-V1.0", "WizardCoder-Python-13B-V1.0", "WizardCoder-Python-34B-V1.0",
-                                 "llama-2-13b-code-alpaca", 'merged'])
+                                 "llama-2-13b-code-alpaca"])
     parser.add_argument("--dataset_name", type=str, default="alpaca_eval", help="dataset to be used", choices=["alpaca_eval", "gsm8k", "MATH", "human_eval", "mbpp"])
     parser.add_argument("--start_index", type=int, default=0)
     parser.add_argument("--end_index", type=int, default=sys.maxsize)
