@@ -82,6 +82,7 @@ def recover_from_pretrained_model(finetuned_model_name, pretrained_model_name, a
 def create_llm(finetuned_model_name, pretrained_model_name, args, logger: logging.Logger, tensor_parallel_size=1, just_inference=False, save_model_path=None):
     if just_inference:
         if os.path.exists(os.path.join(cache_dir, finetuned_model_name)):
+            print(os.path.join(cache_dir, finetuned_model_name))
             llm = LLM(model=os.path.join(cache_dir, finetuned_model_name), tensor_parallel_size=tensor_parallel_size)
         else:
             assert os.path.exists(finetuned_model_name)
