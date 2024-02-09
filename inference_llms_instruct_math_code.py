@@ -554,11 +554,7 @@ def test_mbpp(llm, test_data_path, args, logger: logging.Logger, start_index=0, 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser("Interface for inference LLMs")
-    parser.add_argument("--finetuned_model_name", type=str, default="WizardLM-13B-V1.2", help="name of the finetuned language model",
-                        choices=["WizardLM-7B-V1.0", "WizardLM-13B-V1.2", "WizardLM-70B-V1.0",
-                                 "WizardMath-7B-V1.0", "WizardMath-13B-V1.0", "WizardMath-70B-V1.0",
-                                 "WizardCoder-Python-7B-V1.0", "WizardCoder-Python-13B-V1.0", "WizardCoder-Python-34B-V1.0",
-                                 "llama-2-13b-code-alpaca"])
+    parser.add_argument("--finetuned_model_name", type=str, default="WizardLM-13B-V1.2", help="name of the finetuned language model")
     parser.add_argument("--dataset_name", type=str, default="alpaca_eval", help="dataset to be used", choices=["alpaca_eval", "gsm8k", "MATH", "human_eval", "mbpp"])
     parser.add_argument("--start_index", type=int, default=0)
     parser.add_argument("--end_index", type=int, default=sys.maxsize)
