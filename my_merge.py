@@ -25,12 +25,12 @@ def main():
     print(args)
 
     base_tokenizer = AutoTokenizer.from_pretrained(args.llama_path, use_fast=False)
-    base_model = AutoModelForCausalLM.from_pretrained(args.llama_path, cache_dir="../models/", torch_dtype=torch.float16)
+    base_model = AutoModelForCausalLM.from_pretrained(args.llama_path, cache_dir="../models/")
 
     tokenizer1 = AutoTokenizer.from_pretrained(args.m1, use_fast=False)
     tokenizer2 = AutoTokenizer.from_pretrained(args.m2, use_fast=False)
-    model1 = AutoModelForCausalLM.from_pretrained(args.m1, torch_dtype=torch.float16)
-    model2 = AutoModelForCausalLM.from_pretrained(args.m2, torch_dtype=torch.float16)
+    model1 = AutoModelForCausalLM.from_pretrained(args.m1)
+    model2 = AutoModelForCausalLM.from_pretrained(args.m2)
 
     smart_tokenizer_and_embedding_resize(
         special_tokens_dict=dict(pad_token="[PAD]"),
