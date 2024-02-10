@@ -62,7 +62,7 @@ def main():
                                                 reduce_non_diagonal_ratio=None,
                                                 param_value_mask_rate=None,
                                                 weight_format="delta_weight",
-                                                weight_mask_rates=args.DARE_rate,
+                                                weight_mask_rates=[args.DARE_rate,args.DARE_rate] ,
                                                 use_weight_rescale=True,
                                                 mask_strategy="random",
                                                 mask_apply_method=args.DARE_method,
