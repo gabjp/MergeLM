@@ -629,6 +629,8 @@ class MergingMethod:
                     self.copy_params_to_model(params=masked_param_dict, model=new_model_to_merge)
             if mask_apply_method == "average_merging":
                 merged_params = self.average_merging(models_to_merge=new_models_to_merge, exclude_param_names_regex=exclude_param_names_regex)
+            elif self.merging_method_name == "rank_merging":
+                merged_params = self.rank_merging(models_to_merge=new_models_to_merge, merged_model=merged_model)
             elif mask_apply_method == "task_arithmetic":
                 merged_params = self.task_arithmetic(merged_model=merged_model, models_to_merge=new_models_to_merge, exclude_param_names_regex=exclude_param_names_regex,
                                                      scaling_coefficient=scaling_coefficient)

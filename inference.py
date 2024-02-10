@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser("Interface for direct inference merged LLMs")
     parser.add_argument("--model-path", type=str)
+    parser.add_argument("--save-path", type=str)
     parser.add_argument("--task", type=str)
     parser.add_argument('--start_index', type=int, default=0)
     parser.add_argument("--end_index", type=int, default=sys.maxsize)
@@ -26,7 +27,7 @@ if __name__ == "__main__":
     logger.setLevel(logging.DEBUG)
 
     if args.task == 'human_eval':   
-        save_gen_results_folder = f"./completions"
+        save_gen_results_folder = args.save_path
         test_human_eval(llm=llm, args=args, logger=logger,
                         save_model_path=None, save_gen_results_folder=save_gen_results_folder)
 
