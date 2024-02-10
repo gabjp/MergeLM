@@ -13,10 +13,11 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser("Interface for direct inference merged LLMs")
     parser.add_argument("--model-path", type=str)
+    parser.add_argument("--task", type=str)
     parser.add_argument('--start_index', type=int, default=0)
+    parser.add_argument("--end_index", type=int, default=sys.maxsize)
     
     args = parser.parse_args()
-
 
     llm = LLM(model=args.model_path, tensor_parallel_size=1)
 
@@ -24,12 +25,20 @@ if __name__ == "__main__":
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
+    if args.task == 'human_eval':   
+        save_gen_results_folder = f"./completions"
+        test_human_eval(llm=llm, args=args, logger=logger,
+                        save_model_path=None, save_gen_results_folder=save_gen_results_folder)
+
+    elif args.task == 'gsm8k':
+        test_data_path = "math_code_data/gsm8k_test.jsonl"
+        test_gsm8k(llm=llm, test_data_path=test_data_path, args=args, logger=logger,
+                   start_index=args.start_index, end_index=args.end_index, save_model_path=None)
+    
+    elif args.task == 'MATH':
+        test_data_path = "math_code_data/MATH_test.jsonl"
+        test_hendrycks_math(llm=llm, test_data_path=test_data_path, args=args, logger=logger,
+                            start_index=args.start_index, end_index=args.end_index, save_model_path=None)
         
-    save_gen_results_folder = f"./completions"
-    test_human_eval(llm=llm, args=args, logger=logger,
-                    save_model_path=None, save_gen_results_folder=save_gen_results_folder)
-
-
-    logger.info(f"inference of merging method {args.merging_method_name} is completed")
 
     sys.exit()
