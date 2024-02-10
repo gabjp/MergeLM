@@ -54,7 +54,7 @@ class MergingMethod:
 
         return averaged_params
     
-    def rank_merging(models_to_merge, merged_model):
+    def rank_merging(self, models_to_merge, merged_model):
         with torch.no_grad():
             base = merged_model
             model1 = models_to_merge[0]
