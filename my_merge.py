@@ -68,9 +68,9 @@ def main():
                                                 mask_apply_method=args.DARE_method,
                                                 models_use_deepcopy=False)
 
-    for str in ["/merged_model", "/tokenizer_1", "/tokenizer_2"]:
-        if not os.path.exists(args.save_path + str):
-            os.makedirs(args.save_path + str)
+    for name in ["/merged_model", "/tokenizer_1", "/tokenizer_2"]:
+        if not os.path.exists(args.save_path + name):
+            os.makedirs(args.save_path + name)
     
     merged_model.save_pretrained(args.save_path + "/merged_model")
     tokenizer1.save_pretrained(args.save_path + "/tokenizer_1")
