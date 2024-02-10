@@ -53,6 +53,51 @@ class MergingMethod:
             averaged_params = {param_name: torch.stack(model_to_merge_param, dim=0).mean(dim=0) for param_name, model_to_merge_param in models_to_merge_param_dict.items()}
 
         return averaged_params
+    
+    def rank_merging(models_to_merge, merged_model):
+        with torch.no_grad():
+            base = merged_model
+            model1 = models_to_merge[0]
+            model2 = models_to_merge[1]
+
+            sd_base = list(base.named_parameters())
+            sd_model1 = list(model1.named_parameters())
+            sd_model2 = list(model2.named_parameters())
+
+            m1_sums = []
+            m2_sums = []
+
+            for ((n,v1),(_,v2), (_,v3)) in zip(sd_base, sd_model1, sd_model2):
+                delta_1 = torch.sum(torch.abs(v2-v1))
+                delta_2 = torch.sum(torch.abs(v3-v1))
+                
+                m1_sums.append((delta_1,n))
+                m2_sums.append((delta_2,n))
+
+            m1_sums = sorted(m1_sums, key=lambda tup: tup[0])
+            m2_sums = sorted(m2_sums, key=lambda tup: tup[0])
+
+            layers_rank_m1 = {}
+            layers_rank_m2 = {}
+
+            for i in range(len(m1_sums)):
+                layers_rank_m1[m1_sums[i][1]] = i+1
+                layers_rank_m2[m2_sums[i][1]] = i+1
+
+            it = zip(sd_base, sd_model1, sd_model2)
+
+            merged_params = {}
+
+            for ((n,v1),(_,v2), (_,v3)) in it:
+                
+                p = layers_rank_m1[n] / (layers_rank_m1[n] + layers_rank_m2[n])
+                merged_params[n] = v2 * p + v3 * (1 - p)
+                
+            
+            return merged_params
+
+            
+
 
     def task_arithmetic(self, merged_model: nn.Module, models_to_merge: list, exclude_param_names_regex: list, scaling_coefficient: float = 1.0):
         """
@@ -555,6 +600,8 @@ class MergingMethod:
         """
         if self.merging_method_name == "average_merging":
             merged_params = self.average_merging(models_to_merge=models_to_merge, exclude_param_names_regex=exclude_param_names_regex)
+        elif self.merging_method_name == "rank_merging":
+            merged_params = self.rank_merging(models_to_merge=models_to_merge, merged_model=merged_model)
         elif self.merging_method_name == "task_arithmetic":
             merged_params = self.task_arithmetic(merged_model=merged_model, models_to_merge=models_to_merge, exclude_param_names_regex=exclude_param_names_regex,
                                                  scaling_coefficient=scaling_coefficient)
