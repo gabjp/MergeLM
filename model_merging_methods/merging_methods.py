@@ -116,7 +116,7 @@ class MergingMethod:
                     print(f"skipping layer {n}")
                     continue
 
-                layer_num = layer_name[2]
+                layer_num = int(layer_name[2])
 
                 delta_1 = torch.sum(torch.abs(v2-v1))
                 delta_2 = torch.sum(torch.abs(v3-v1))
@@ -152,7 +152,7 @@ class MergingMethod:
                     p = 0.5
                 
                 else:
-                    layer_num = layer_name[2]
+                    layer_num = int(layer_name[2])
                     p = layers_rank_m1[layer_num] / (layers_rank_m1[layer_num] + layers_rank_m2[layer_num])
 
                 merged_params[n] = v2 * p + v3 * (1 - p)
