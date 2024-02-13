@@ -17,6 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("--task", type=str)
     parser.add_argument('--start_index', type=int, default=0)
     parser.add_argument("--end_index", type=int, default=sys.maxsize)
+    parser.add_argument("--finetuned-model-name", type=str)
     
     args = parser.parse_args()
 
