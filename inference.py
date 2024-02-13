@@ -30,6 +30,11 @@ if __name__ == "__main__":
         save_gen_results_folder = args.save_path
         test_human_eval(llm=llm, args=args, logger=logger,
                         save_model_path=None, save_gen_results_folder=save_gen_results_folder)
+        
+    elif args.task == "alpaca_eval":
+        test_alpaca_eval(llm=llm, finetuned_model_name=args.finetuned_model_name,
+                         args=args, logger=logger, start_index=args.start_index, end_index=args.end_index,
+                         save_model_path=None, save_gen_results_folder=args.save_path)
 
     elif args.task == 'gsm8k':
         test_data_path = "math_code_data/gsm8k_test.jsonl"
