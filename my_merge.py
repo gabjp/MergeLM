@@ -45,6 +45,19 @@ def main():
             tokenizer=finetuned_tokenizer
         )
 
+    print(model1.get_input_embeddings().weight.data.size())
+    print(model1.get_output_embeddings().weight.data.size())
+
+
+    print(model2.get_input_embeddings().weight.data.size())
+    print(model2.get_output_embeddings().weight.data.size())
+
+
+
+    print(base_model.get_input_embeddings().weight.data.size())
+    print(base_model.get_output_embeddings().weight.data.size())
+
+
     print('models loaded', flush=True)
 
     set_random_seed(seed=0)
