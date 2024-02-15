@@ -37,8 +37,13 @@ def main():
         model=base_model,
         tokenizer=base_tokenizer
     )
+
+    print(model2.get_input_embeddings().weight.data.size())
+    print(model2.get_output_embeddings().weight.data.size())
+    print()
     
     for finetuned_model, finetuned_tokenizer in zip([model1, model2], [tokenizer1, tokenizer2]):
+        print("!")
         smart_tokenizer_and_embedding_resize(
             special_tokens_dict=dict(pad_token="[PAD]"),
             model=finetuned_model,
@@ -51,6 +56,7 @@ def main():
 
     print(model2.get_input_embeddings().weight.data.size())
     print(model2.get_output_embeddings().weight.data.size())
+    print()
 
 
 
