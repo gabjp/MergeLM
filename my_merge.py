@@ -57,6 +57,12 @@ def main():
     print(base_model.get_input_embeddings().weight.data.size())
     print(base_model.get_output_embeddings().weight.data.size())
 
+    for (n,m1),(_,m2),(_,b) in zip(model1.named_parameters(), model2.named_parameters(), base_model.named_parameters()):
+        if m1.size() != b.size():
+            print(f"m1 mismatch {n},{m1.size()},{b.size()}")
+        if m2.size() != b.size():
+            print(f"m2 mismatch {n},{m2.size()},{b.size()}")
+
 
     print('models loaded', flush=True)
 
