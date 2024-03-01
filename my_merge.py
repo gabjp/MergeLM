@@ -25,8 +25,10 @@ def main():
 
     print(args)
 
-    base_tokenizer = AutoTokenizer.from_pretrained(args.llama_path, use_fast=False)
-    base_model = AutoModelForCausalLM.from_pretrained(args.llama_path)
+    TOKEN = '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'
+
+    base_tokenizer = AutoTokenizer.from_pretrained(args.llama_path, use_fast=False, token=TOKEN)
+    base_model = AutoModelForCausalLM.from_pretrained(args.llama_path, token=TOKEN)
 
     tokenizer1 = AutoTokenizer.from_pretrained(args.m1, use_fast=False)
     tokenizer2 = AutoTokenizer.from_pretrained(args.m2, use_fast=False)
