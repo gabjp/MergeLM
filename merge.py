@@ -14,6 +14,7 @@ def main():
     parser.add_argument("--save-path", type=str, default="")
     parser.add_argument("--m1", type=str, default="")
     parser.add_argument("--m2", type=str, default="")
+    parser.add_argument("--m3", type=str, default="")
     parser.add_argument("--llama-path", type=str, default="meta-llama/Llama-2-7b-hf")
     parser.add_argument("--method", type=str, default="")
     args = parser.parse_args()
@@ -27,6 +28,12 @@ def main():
     model1 = PeftModel.from_pretrained(llama1, args.m1).merge_and_unload()
     model2 = PeftModel.from_pretrained(llama2, args.m2).merge_and_unload()
 
+    if args.m3 != "":
+        llama3 = AutoModelForCausalLM.from_pretrained(args.llama_path)
+        model3 = PeftModel.from_pretrained(llama3, args.m3).merge_and_unload()
+
+    models_to_merge = [model1, model2] if args.m3 == "" else [model1, model2, model3]
+
     print('models loaded', flush=True)
 
     if args.method == "ties":
@@ -34,9 +41,9 @@ def main():
         merging_method = MergingMethod(merging_method_name="ties_merging")
         merged_model = pretrained_model
         merged_model = merging_method.get_merged_model(merged_model=merged_model,
-                                                    models_to_merge=[model1, model2],
+                                                    models_to_merge=models_to_merge,
                                                     exclude_param_names_regex=[],
-                                                    trainers=[None, None],
+                                                    trainers=[None for _ in range(len(models_to_merge))],
                                                     scaling_coefficient=1.0,
                                                     nums_fisher_examples=None, 
                                                     fisher_scaling_coefficients=None,
@@ -57,9 +64,9 @@ def main():
         merging_method = MergingMethod(merging_method_name="average_merging")
         merged_model = pretrained_model
         merged_model = merging_method.get_merged_model(merged_model=merged_model,
-                                                    models_to_merge=[model1, model2],
+                                                    models_to_merge=models_to_merge,
                                                     exclude_param_names_regex=[],
-                                                    trainers=[None, None],
+                                                    trainers=[None for _ in range(len(models_to_merge))],
                                                     scaling_coefficient=None,
                                                     nums_fisher_examples=None, 
                                                     fisher_scaling_coefficients=None,
@@ -80,9 +87,9 @@ def main():
         merging_method = MergingMethod(merging_method_name="mask_merging")
         merged_model = pretrained_model
         merged_model = merging_method.get_merged_model(merged_model=merged_model,
-                                                    models_to_merge=[model1, model2],
+                                                    models_to_merge=models_to_merge,
                                                     exclude_param_names_regex=[],
-                                                    trainers=[None, None],
+                                                    trainers=[None for _ in range(len(models_to_merge))],
                                                     scaling_coefficient=None,
                                                     nums_fisher_examples=None, 
                                                     fisher_scaling_coefficients=None,
@@ -92,7 +99,7 @@ def main():
                                                     reduce_non_diagonal_ratio=None,
                                                     param_value_mask_rate=None,
                                                     weight_format="delta_weight",
-                                                    weight_mask_rates=[0.9,0.9],
+                                                    weight_mask_rates=[0.9 for _ in range(len(models_to_merge))],
                                                     use_weight_rescale=True,
                                                     mask_strategy="random",
                                                     mask_apply_method="average_merging",
